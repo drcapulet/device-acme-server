@@ -7,12 +7,12 @@ Bundler.require(:default)
 ACCOUNT_KEYS = Concurrent::Map.new
 NONCES = Concurrent::Map.new
 
-K8S_CLIENT = K8s::Client.in_cluster_config
-CR_RESOURCE = K8S_CLIENT.api('cert-manager.io/v1').resource('certificaterequests', namespace: 'default')
-
 ISSUER_KIND = ENV.fetch('ISSUER_KIND')
 ISSUER_NAME = ENV.fetch('ISSUER_NAME')
 POD_NAMESPACE = ENV.fetch('POD_NAMESPACE')
+
+K8S_CLIENT = K8s::Client.in_cluster_config
+CR_RESOURCE = K8S_CLIENT.api('cert-manager.io/v1').resource('certificaterequests', namespace: POD_NAMESPACE)
 
 class App < Sinatra::Base
   enable :logging
