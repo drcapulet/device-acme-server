@@ -1,0 +1,4 @@
+.dockerfileignore
+.tool-versions
+Dockerfile
+README.md
