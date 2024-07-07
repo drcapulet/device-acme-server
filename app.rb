@@ -85,7 +85,7 @@ class App < Sinatra::Base
     certificate_request = CR_RESOURCE.get(params.fetch(:id))
 
     status = if certificate_request.status.conditions.detect { |c| c.type == 'Ready' }&.status == 'True'
-      'ready'
+      'valid'
     else
       'processing'
     end
@@ -96,7 +96,7 @@ class App < Sinatra::Base
       status: status,
     }
 
-    response[:certificate] = File.join(request.base_url, "/orders/#{params.fetch(:id)}/certificate") if status == 'ready'
+    response[:certificate] = File.join(request.base_url, "/orders/#{params.fetch(:id)}/certificate") if status == 'valid'
 
     json(response)
   end
