@@ -4,9 +4,8 @@ require 'bundler/setup'
 require 'securerandom'
 Bundler.require(:default)
 
-set :bind, '0.0.0.0'
-port = ENV['PORT'] || '8080'
-set :port, port
+set :bind, ENV['BIND'] || '0.0.0.0'
+set :port, ENV['PORT'] || '8080'
 set :server, :thin
 
 ACCOUNT_KEYS = Concurrent::Map.new
