@@ -153,7 +153,7 @@ class App < Sinatra::Base
           TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384
         ].join(':'),
         private_key_file: ENV['TLS_KEY'],
-        ssl_version: ['TLSv1_2', 'TLSv1_3'],
+        ssl_version: ['TLSv1_2'],
         verify_peer: false,
       }
     end
