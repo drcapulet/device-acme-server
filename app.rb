@@ -82,9 +82,9 @@ class App < Sinatra::Base
   post '/orders/:id' do
     decode_and_validate_payload(request.body.read, allow_blank_payload: true)
 
-    request = CR_RESOURCE.get(params.fetch(:id))
+    certificate_request = CR_RESOURCE.get(params.fetch(:id))
 
-    status = if request.status.conditions.detect { |c| c.type == 'Ready' }&.status == 'Ready'
+    status = if certificate_request.status.conditions.detect { |c| c.type == 'Ready' }&.status == 'Ready'
       'ready'
     else
       'processing'
