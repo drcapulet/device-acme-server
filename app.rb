@@ -80,7 +80,7 @@ class App < Sinatra::Base
   end
 
   post '/orders/:id' do
-    decode_and_validate_payload(request.body.read)
+    decode_and_validate_payload(request.body.read, allow_blank_payload: true)
 
     request = CR_RESOURCE.get(params.fetch(:id))
 
@@ -102,7 +102,7 @@ class App < Sinatra::Base
   end
 
   post '/orders/:id/certificate' do
-    decode_and_validate_payload(request.body.read)
+    decode_and_validate_payload(request.body.read, allow_blank_payload: true)
 
     request = CR_RESOURCE.get(params.fetch(:id))
 
@@ -139,7 +139,7 @@ class App < Sinatra::Base
 
   protected
 
-  def decode_and_validate_payload(body)
+  def decode_and_validate_payload(body, allow_blank_payload: false)
     contents = begin
       JSON.parse(body)
     rescue JSON::ParserError => e
@@ -163,7 +163,7 @@ class App < Sinatra::Base
     if protected_contents.key?('jwk')
       jwk = JSON::JWK.new(protected_contents['jwk'])
       return begin
-        [JSON::JWT.decode(contents, jwk), jwk]
+        [JSON::JWT.decode(contents, jwk, nil, nil, allow_blank_payload), jwk]
       rescue JSON::JWS::VerificationFailed
         halt 400
       end
@@ -175,7 +175,7 @@ class App < Sinatra::Base
       end
 
       return begin
-        [JSON::JWT.decode(contents, jwk), jwk]
+        [JSON::JWT.decode(contents, jwk, nil, nil, allow_blank_payload), jwk]
       rescue JSON::JWS::VerificationFailed
         error_response 'urn:ietf:params:acme:error:malformed'
       end
