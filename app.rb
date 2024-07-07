@@ -7,6 +7,29 @@ Bundler.require(:default)
 set :bind, ENV['BIND'] || '0.0.0.0'
 set :port, ENV['PORT'] || '8080'
 set :server, :thin
+if ENV.key?('TLS_CERTIFICATE') && ENV.key?('TLS_KEY')
+  set :server_settings, {
+    ssl: true,
+    ssl_cert_file: ENV['TLS_CERTIFICATE'],
+    # This is the compatible set from https://developers.cloudflare.com/ssl/reference/cipher-suites/recommendations/
+    ssl_cipher_list: %w[
+      TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+      TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256
+      TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+      TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256
+      TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384
+      TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+      TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256
+      TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256
+      TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384
+      TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384
+    ].join(':'),
+    # This is a bit of a misnomer, this is related to requiring client certificates
+    ssl_disable_verify: true,
+    ssl_key_file: ENV['TLS_KEY'],
+    ssl_version: 'TLSv1_2',
+  }
+end
 
 ACCOUNT_KEYS = Concurrent::Map.new
 NONCES = Concurrent::Map.new
