@@ -84,7 +84,7 @@ class App < Sinatra::Base
 
     certificate_request = CR_RESOURCE.get(params.fetch(:id))
 
-    status = if certificate_request.status.conditions.detect { |c| c.type == 'Ready' }&.status == 'Ready'
+    status = if certificate_request.status.conditions.detect { |c| c.type == 'Ready' }&.status == 'True'
       'ready'
     else
       'processing'
