@@ -15,6 +15,8 @@ ISSUER_NAME = ENV.fetch('ISSUER_NAME')
 POD_NAMESPACE = ENV.fetch('POD_NAMESPACE')
 
 class App < Sinatra::Base
+  enable :logging
+
   set :bind, ENV['BIND'] || '0.0.0.0'
   set :port, ENV['PORT'] || '8080'
   set :server, :thin
